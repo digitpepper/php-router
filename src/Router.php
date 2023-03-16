@@ -6,15 +6,24 @@ namespace DP;
 
 class Router
 {
+	/**
+	 * @var array<string, array<callable>>
+	 */
 	protected $routes = [];
 
-	public function route($pattern, ...$callbacks)
+	public function route(string $pattern, callable ...$callbacks): void
 	{
 		$pattern = '/^' . str_replace('/', '\/', $pattern) . '$/';
 		$this->routes[$pattern] = $callbacks;
 	}
 
-	public function execute($request_method, $url, ...$arguments)
+	/**
+	 * @param string $request_method
+	 * @param string $url
+	 * @param mixed ...$arguments
+	 * @return mixed|null
+	 */
+	public function execute(string $request_method, string $url, ...$arguments)
 	{
 		foreach ($this->routes as $pattern => $callbacks) {
 			$found = false;
