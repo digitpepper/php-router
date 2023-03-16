@@ -13,7 +13,7 @@ class Router
 
 	public function route(string $pattern, callable ...$callbacks): void
 	{
-		$pattern = '/^' . str_replace('/', '\/', $pattern) . '$/';
+		$pattern = '/^' . \str_replace('/', '\/', $pattern) . '$/';
 		$this->routes[$pattern] = $callbacks;
 	}
 
@@ -28,13 +28,13 @@ class Router
 		foreach ($this->routes as $pattern => $callbacks) {
 			$matches = null;
 			$result = null;
-			if (preg_match($pattern, "$request_method $url", $matches)) {
+			if (\preg_match($pattern, "$request_method $url", $matches)) {
 				foreach ($callbacks as $index => $callback) {
 					if ($index === 0) {
-						array_shift($matches);
-						$result = call_user_func_array($callback, array_merge($arguments, array_values($matches)));
+						\array_shift($matches);
+						$result = \call_user_func_array($callback, \array_merge($arguments, \array_values($matches)));
 					} else {
-						$result = call_user_func_array($callback, array_merge($arguments, $result));
+						$result = \call_user_func_array($callback, \array_merge($arguments, $result));
 					}
 				}
 				return $result;
