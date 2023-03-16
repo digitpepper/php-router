@@ -26,23 +26,17 @@ class Router
 	public function execute(string $request_method, string $url, ...$arguments)
 	{
 		foreach ($this->routes as $pattern => $callbacks) {
-			$found = false;
 			$matches = null;
 			$result = null;
-			foreach ($callbacks as $index => $callback) {
-				if ($index === 0) {
-					$found = preg_match($pattern, "$request_method $url", $matches);
-					if ($found) {
+			if (preg_match($pattern, "$request_method $url", $matches)) {
+				foreach ($callbacks as $index => $callback) {
+					if ($index === 0) {
 						array_shift($matches);
 						$result = call_user_func_array($callback, array_merge($arguments, array_values($matches)));
 					} else {
-						break;
+						$result = call_user_func_array($callback, array_merge($arguments, $result));
 					}
-				} else {
-					$result = call_user_func_array($callback, array_merge($arguments, $result));
 				}
-			}
-			if ($found) {
 				return $result;
 			}
 		}
